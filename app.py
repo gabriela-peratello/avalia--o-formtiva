@@ -2,6 +2,7 @@ from flask import Flask, redirect, render_template, request
 import mysql.connector
 from database.conexao import conectar
 from model.requisitos import cadastrar_requsito
+from model.requisitos import recuperar_tarefas
 
 app = Flask(__name__)
 
@@ -14,11 +15,16 @@ def pag_principal():
 def pag_requisitos():
     return render_template("requisitos.html")
 
+@app.route("/mstrequi")
+def pag_requisitos():
+    requisitos = recuperar_tarefas()
+    return render_template("requisitos.html", requisitos = requisitos)
+
 @app.route("/adcRequi", methods=["GET", "POST"])
-def cad_requisto():
-    desc = request.form.get("desc")
+def inserir_requisto():
+    desc = request.form.get("descricao")
     nivel = request.form.get("nivel")
-    val = request.form.get("val")
+    val = request.form.get("valor")
 
     if cadastrar_requsito(desc, nivel, val):
         return redirect("/requi")
